@@ -1,0 +1,46 @@
+# Muon²-F | GPT-Large (774M) | 15.5B FineWeb tokens | 5 Newton-Schulz steps
+optimizer_params:
+  - name: muon2_f
+    lr: [0.02]
+    weight_decay: 0.1
+    lr_schedule: constant-linear
+    constant_fraction: 0.4   # constant lr for 40% of training, then linear decay to 0.1x
+    ns_steps: 5
+    betas: [0.95, 0.95]
+
+training_params:
+  tokens_processed: 4194304   # global batch size in tokens
+  batch_size: 1               # per-GPU micro-batch size (gradient accumulation fills the rest)
+  context_length: 8192
+  num_epochs: 1
+  gradnorm: 1.0
+  tensorcore_precision: high
+  autocast: True
+  mixed_precision: bfloat16
+  compile: True
+
+logging_params:
+  val_tokens_processed: 8388608
+  log_step: 50
+  val_step: 500
+  save_ckpt_step: 10000
+  load_ckpt_step: 0
+  keep_last: 2
+  ckpt_dir: "outputs/checkpoints"
+  results_dir: "outputs/results"
+  wandb:
+    project: "Muon2-GPT-Large"
+    dir: "outputs/wandb"
+
+model_config:
+  block_size: 8192
+  n_embd: 1280
+  n_layer: 36
+  n_head: 20
+  vocab_size: 50257
+  flash_attention: True
+
+dataset:
+  name: "fineweb100B"
+  tokenizer: "gpt2"
+  total_tokens_B: 15.5

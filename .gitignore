@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# macOS
+.DS_Store
+
+# Data, outputs, checkpoints and logs
+data/
+outputs/
+wandb/
+logs/
+*.bin
+*.pt
+*.pth
+slurm-*.out

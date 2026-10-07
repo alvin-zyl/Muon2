@@ -1,0 +1,48 @@
+# Muon | GPT-Base (362M) | 7.2B FineWeb tokens | 3 Newton-Schulz steps
+optimizer_params:
+  - name: muon
+    lr: [0.005]
+    weight_decay: 0.1
+    lr_schedule: constant-linear
+    constant_fraction: 0.4   # constant lr for 40% of training, then linear decay to 0.1x
+    ns_steps: 3
+    momentum: 0.95
+    nesterov: True
+    betas: [0.95, 0.95]
+
+training_params:
+  tokens_processed: 2097152   # global batch size in tokens
+  batch_size: 8               # per-GPU micro-batch size (gradient accumulation fills the rest)
+  context_length: 4096
+  num_epochs: 1
+  gradnorm: 1.0
+  tensorcore_precision: high
+  autocast: True
+  mixed_precision: bfloat16
+  compile: True
+
+logging_params:
+  val_tokens_processed: 8388608
+  log_step: 50
+  val_step: 500
+  save_ckpt_step: 10000
+  load_ckpt_step: 0
+  keep_last: 2
+  ckpt_dir: "outputs/checkpoints"
+  results_dir: "outputs/results"
+  wandb:
+    project: "Muon2-GPT-Base"
+    dir: "outputs/wandb"
+
+model_config:
+  block_size: 4096
+  n_embd: 1024
+  n_layer: 24
+  n_head: 16
+  vocab_size: 50257
+  flash_attention: True
+
+dataset:
+  name: "fineweb10B"
+  tokenizer: "gpt2"
+  total_tokens_B: 7.2
